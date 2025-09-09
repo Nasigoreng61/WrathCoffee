@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WrathCoffee</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+ <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: white;
+      position: relative;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    .right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 65%;
+      height: 100vh;
+      background: #713600;
+      clip-path: ellipse(60% 100% at 100% 50%);
+      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 50px;
+    }
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      transition: background-color 0.3s ease;
+      z-index: 10;
+    }
+    .navbar.scrolled {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    #Home {
+      position: relative;
+      z-index: 5;
+    }
+    .btn-custom {
+      background-color: #a0522d;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .btn-custom:hover {
+      background-color: #8b4513;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .scroll-text {
+      white-space: nowrap;
+      display: inline-block;
+      font-size: 28px;
+      font-weight: bold;
+      color: #713600;
+      animation: scroll-right 12s linear infinite;
+    }
+    @keyframes scroll-right {
+      0% { transform: translate(-100%); }
+      100% { transform: translate(100%); }
+    }
+    .menu {
+      padding: 50px 20px;
+      background: #fff;
+      text-align: center;
+    }
+    .menu h2 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      color: #5a2d0c;
+    }
+    .menu-container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      background: #fdf6ec;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .menu-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-right: 20px;
+    }
+    .menu-info {
+      text-align: left;
+      flex: 1;
+    }
+    .menu-info h3 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+      color: #3e1f0f;
+    }
+    .menu-info p {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+    .price {
+      font-weight: bold;
+      color: #5a2d0c;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .quantity button {
+      background: #8b4513;
+      color: #fff;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .quantity input {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .menu-total {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px 30px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+    .menu-total h3 {
+      font-size: 1.4rem;
+      color: #5a3a1e;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .menu-total span {
+      color: #d2691e;
+    }
+    .order-btn {
+      background: linear-gradient(135deg,#5a3a1e, #7b4f27);
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .order-btn:hover {
+      background: linear-gradient(135deg,#7b4f27, #5a3a1e );
+      transform: scale(1.05);
+    }
+   .notif {
+     display: none; 
+     position: fixed; 
+     top: 50%; 
+     left: 50%; 
+     transform: translate(-50%, -50%); 
+     background: #fff;
+    padding: 30px 40px; 
+    border-radius: 15px; 
+    text-align: center; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); 
+    z-index: 1000; 
+    opacity: 0; 
+    transition: opacity 0.5s ease-in-out; 
+  } 
+  .notif.show { 
+    display: block; 
+    opacity: 1;
+   } 
+   .notif.hide { 
+    opacity: 0;
+   } 
+   .notif .checkmart { 
+    font-size: 55px; 
+    color: #28a745; 
+    margin-bottom: 15px; 
+  }
+ .about {
+    background: linear-gradient(135deg, #fdf6ec, #fceee0);
+    padding: 80px 20px;
+    font-family: 'Poppins', sans-serif;
+    padding-top: 50px;
+  }
+
+  .about-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    max-width: 1200px;
+    margin: auto;
+    flex-wrap: wrap;
+  }
+
+  .about-image img {
+    width: 360px;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease;
+  }
+  .about-image img:hover {
+    transform: scale(1.05);
+  }
+
+  .about-text {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .about-text h2 {
+    font-size: 2.2rem;
+    color: #4b2e2e;
+    margin-bottom: 15px;
+    position: relative;
+  }
+  .about-text h2 span {
+    color: #c27a48;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 30px;
+    line-height: 1.7;
+  }
+
+  .about-points {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+ .point {
+  display: flex;
+  align-items: center;   /* ini yg bikin icon & teks sejajar tengah */
+  gap: 14px;
+  background: #fff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+  .point:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+  }
+
+  .point .icon {
+    font-size: 1.6rem;
+  }
+
+  .text h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+  .point b {
+    color: #4b2e2e;
+    font-size: 1.05rem;
+  }
+.text p {
+  margin: 2px 0 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+  .layanan {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff8ee;
+  }
+  .layanan h2 {
+    font-size: 2rem;
+    color: #5c2c0c;
+    margin-bottom: 40px;
+  }
+  .layanan-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .layanan-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .layanan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+ .icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fdeee3;
+  font-size: 1.6rem;
+} 
+  .layanan-card h3 {
+    font-size: 1.2rem;
+    color: #2c1810;
+    margin-bottom: 10px;
+  }
+  .layanan-card p {
+    font-size: 0.95rem;
+    color: #555;
+  }
+/* Section Styling */
+.contact-section {
+  padding: 60px 20px;
+  background: linear-gradient(to bottom, #fdeee3, #fff);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.section-title {
+  font-size: 28px;
+  color: #6b3e26;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+/* Container */
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Info Card */
+.contact-info, 
+.contact-form {
+  flex: 1 1 400px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.contact-info h3,
+.contact-form h3 {
+  margin-bottom: 20px;
+  color: #6b3e26;
+  font-size: 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.info-item i {
+  font-size: 22px;
+  color: #d35400;
+  margin-right: 12px;
+  margin-top: 4px;
+}
+
+.map img {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+/* Form Styling */
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form input,
+.contact-form textarea {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #d35400;
+  box-shadow: 0 0 5px rgba(211, 84, 0, 0.3);
+}
+
+.contact-form textarea {
+  resize: none;
+  height: 120px;
+}
+
+.contact-form button {
+  background: #d35400;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.contact-form button:hover {
+  background: #a84300;
+}
+
+.footer {
+  background: #4b2e2e;
+  color: #fff;
+  padding: 40px 20px 20px;
+  font-family: 'poppins', sans-serif;
+}
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-bottom: 20px;
+}
+.footer-section h2,
+.footer-section h3 {
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.footer-section p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+.footer-section ul li a {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-section ul li a:hover {
+  color: #fff;
+}
+.sosial-icons a {
+  display: inline-block;
+  margin-right: 12px;
+  font-size: 20px;
+  color: #ddd;
+  transition: color 0.3s;
+}
+.sosial-icons a:hover {
+  color: #fff;
+}
+.footer-bottom {
+  text-align: center;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+}
+#testimoni {
+  background-color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+#testimoni h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #5a3e2b;
+}
+.testimoni-container {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 40px auto;
+  max-width: 1100px;
+}
+.card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 20px;
+  max-width: 300px;
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 15px;  
+}
+.profile img {
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+}
+.profile h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+.stars {
+  margin: 3px 0 0;
+  color: #f5b50a;
+  font-size: 0.9rem;
+}
+.card p {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+@media (max-width: 768px) {
+}
+
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top navbar-transparent"data-aos="fade-down" data-aos-duration="800" >
+    <div class="container">
+      <a class="navbar-brand fw-bold text-black" href="#">WrathCoffee</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link text-black" href="#Home">Home</a></li>
+          <li class="nav-item"><a class="nav-link text-black" href="#tentang">About</a></li>
+          <li class="nav-item"><a class="nav-link text-black" href="#kontak">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="right"></div>
+  <section id="Home" class="d-flex align-items-center" style="height:80vh;">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 col-md-6">
+          <h1 class="fw-bold text-black display-3" data-aos="fade-up" data-aos-duration="1000">WeCoffee</h1>
+          <p class="text-black fs-5"data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200" >
+            Menikmati segelas kopi yg begitu <br>
+            nikmat saat bersantai di hari yang <br>
+            panjang :)
+          </p>
+          <a href="#kontak" class="btn-custom"data-aos="fade-up" data-aos-duration="1400" data-aos-delay="400">Hubungi kami</a>
+        </div>
+        <div class="right d-flex align-items-center justify-content-end pe-5"data-aos="zoom-in" data-aos-duration="1200">
+          <model-viewer src="coffe_cup.glb" alt="Coffee" auto-rotate camera-controls style="width: 300px; height: 300px; margin-right: 60px;"></model-viewer>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <section class="about" style="margin-top: 130px;" id="tentang">
+  <div class="about-container">
+    <div class="about-image"data-aos="fade-right"
+         data-aos-duration="1000">
+      <img src="Kopi-tentang.jpeg" alt="Tentang WrathCoffee">
+    </div>
+    <div class="about-text">
+      <h2 data-aos="fade-up" data-aos-duration="1000" >Tentang <span>WrathCoffee</span></h2>
+      <p data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000" >
+        WrathCoffee berdiri sejak 2015 dengan tujuan menghadirkan kopi terbaik
+        untuk semua kalangan. Dari kedai kecil, kini kami tumbuh menjadi tempat
+        favorit pecinta kopi di kota ini.
+      </p>
+
+      <div class="about-points">
+        <div class="point" data-aos="fade-left" data-aos-duration="1000">
+          <span class="icon">✅</span>
+          <div>
+            <h4>Sertifikasi Halal MUI</h4>
+            <p>Semua menu kami dijamin halal dan aman dikonsumsi.</p>
+          </div>
+        </div>
+
+        <div class="point" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1000" >
+          <span class="icon">🕒</span>
+          <div>
+            <h4>Jam Operasional</h4>
+            <p>Senin - Sabtu: 07.00 - 22.00 WIB <br> Minggu: 08.00 - 20.00 WIB</p>
+          </div>
+        </div>
+
+        <div class="point" data-aos="fade-left" data-aos-delay="400" data-aos-duration="1000">
+          <span class="icon">⭐</span>
+          <div>
+            <h4>Komitmen Kami</h4>
+            <p>Menyajikan kopi premium dengan rasa otentik, kebersihan terjamin, dan harga bersahabat.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <div style="background-color: #fff3d9; padding: 15px 0; overflow: hidden; margin: 10px 0; margin-top: 0px;">
+    <div class="scroll-text">Welcome to WrathCoffe, nikmati pagimu dengan yg manis</div>
+  </div>
+  <section class="menu">
+    <h2 data-aos="fade-up" data-aos-duration="1000" >Menu Kami</h2>
+    <div class="menu-container">
+      <div class="menu-item" data-aos="fade-right" data-aos-duration="900">
+        <img src="Kopi1.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Latte</h3>
+          <p>Kopi ini berasal dari Italy yg dilapisi susu yg lezat</p>
+          <span class="price" data-price="8000">Rp 8.000</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-left" data-aos-duration="900" >
+        <img src="Kopi2.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Cappuccino</h3>
+          <p>Kopi Italy dengan busa susu tebal dan taburan cokelat/kayu manis</p>
+          <span class="price" data-price="8000">Rp 8.000</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-right" data-aos-duration="900" >
+        <img src="Kopi3.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Hitam</h3>
+          <p>Kopi murni tanpa tambahan susu/krim</p>
+          <span class="price" data-price="3000">Rp 3.000</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-left" data-aos-duration="900">
+        <img src="Kopi4.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Es Kopi Susu Gula Aren</h3>
+          <p>Kopi dengan es batu, gula aren, dan susu</p>
+          <span class="price" data-price="9500">Rp 9.500</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-right" data-aos-duration="900">
+        <img src="Kopi5.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Susu</h3>
+          <p>Kopi asal Spanyol dengan campuran susu</p>
+          <span class="price" data-price="8000">Rp 8.000</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-left" data-aos-duration="900">
+        <img src="Kopi6.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Biasa</h3>
+          <p>Kopi sederhana dari biji kopi pilihan</p>
+          <span class="price" data-price="3000">Rp 3.000</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-right" data-aos-duration="900" >
+        <img src="Kopi7.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Es Kopi Latte</h3>
+          <p>Kopi latte dingin dengan susu & cream</p>
+          <span class="price" data-price="9500">Rp 9.500</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item"  data-aos="fade-left" data-aos-duration="900">
+        <img src="Kopi8.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Biji Kopi Arabika</h3>
+          <p>Biji kopi Flores Manggarai, Honey Process, Medium Roast</p>
+          <span class="price" data-price="12500">Rp 12.500</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-right" data-aos-duration="900">
+        <img src="Kopi9.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Robusta Taprobana</h3>
+          <p>Biji kopi robusta dari Jangkat, Honey Process</p>
+          <span class="price" data-price="10500">Rp 10.500</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="menu-item" data-aos="fade-left" data-aos-duration="900">
+        <img src="Kopi10.jpg" alt="kopi">
+        <div class="menu-info">
+          <h3>Kopi Bubuk Robyta</h3>
+          <p>Bubuk kopi 100% asli</p>
+          <span class="price" data-price="10500">Rp 10.500</span>
+          <div class="quantity">
+            <button class="minus">-</button>
+            <input type="text" value="0" readonly>
+            <button class="plus">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form id="hiddenForm"action="submit_pesanan.php" method="post">
+      <input type="hidden" name="nama">
+      <input type="hidden" name="jumlah">
+      <input type="hidden" name="total">
+    <div class="menu-total" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="200">
+      <h3>Total: <span id="total">Rp 0</span></h3>
+      <button type="button" class="order-btn" onclick="pesanan()">Pesan</button>
+    </div>
+    </form>
+    <div class="notif" id="notif">
+      <div class="checkmart">✅</div>
+      <h5>Pesanan sukses</h5>
+    </div>
+  </section>
+
+  <section class="layanan">
+    <h2  data-aos="fade-down" data-aos-duration="1000">Layanan kami</h2>
+    <div class="layanan-container">
+      <div class="layanan-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100" >
+        <div class="icon">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <h3>Makan di Tempat</h3>
+        <p>Nikmati suasana hangat dan nyaman di warung kami dengan pelayanan ramah.</p>
+      </div>
+      <div class="layanan-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" >
+        <div class="icon">
+          <i class="fa-solid fa-motorcycle"></i>
+        </div>
+        <h3>Pesan Antar</h3>
+        <p>Pesan kopi favoritmu dan kami antar langsung ke tempatmu.</p>
+      </div>
+      <div class="layanan-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+        <div class="icon">
+          <i class="fa-solid fa-box"></i>
+        </div>
+        <h3>Pesan untuk Acara</h3>
+        <p>Tersedia berbagai macam kopi untuk acara spesial Anda.</p>
+      </div>
+      <div class="layanan-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400" >
+        <div class="icon">
+          <i class="fa-solid fa-bowl-food"></i>
+        </div>
+        <h3>Catering Harian</h3>
+        <p>Layanan kopi harian untuk kantor,kos atau keluarga dengan menu bervariasi</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimoni">
+    <h2 data-aos="fade-down" data-aos-duration="1000">Rating</h2>
+    <div class="testimoni-container">
+      <div class="card" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="100">
+        <div class="profile">
+          <img src="my1.png" alt="Pelanggan">
+        <div>
+        <h3>Mybini</h3>
+        <p class="stars">⭐⭐⭐⭐⭐</p>
+        </div>
+        </div>
+        <p>"Enak banget kopinya! jadi ketagihan deh"</p>
+      </div>
+       <div class="card" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="200">
+        <div class="profile">
+          <img src="my2.jpg" alt="pelanggan">
+        <div>
+        <h3>MyIstri</h3>
+        <p class="stars">⭐⭐⭐⭐⭐</p>
+        </div>
+        </div>
+        <p>"Gk sia-sia dah beli disini karna puas 100% sama rasa dan pemandangannya "</p>
+      </div>
+       <div class="card" data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="300">
+        <div class="profile">
+          <img src="hytam.png" alt="Pelanggan">
+        <div>
+        <h3>hytam</h3>
+        <p class="stars">⭐⭐⭐⭐⭐</p>
+        </div>
+        </div>
+        <p>"100% buat kepuasan pelayanan nya ma rasa kopinya "</p>
+      </div>
+    </div>
+  </section>
+
+    <section class="contact-section" id="kontak">
+  <h2 class="section-title" data-aos="fade-up" data-aos-duration="1000" >Hubungi Kami</h2>
+  <div class="contact-container">    
+    <div class="contact-info">
+      <h3 data-aos="fade-right" data-aos-duration="1200">Informasi Kontak</h3>
+      <div class="info-item" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100" >
+        <i class="fas fa-map-marker-alt"></i>
+        <div>
+          <strong>Alamat</strong><br>
+          Jl. Inpres Baru No. 123, Kelurahan Sukamaju, Kec. Jagakarsa, Jakarta Selatan
+        </div>
+      </div>
+      <div class="info-item" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" >
+        <i class="fab fa-whatsapp"></i>
+        <div>
+          <strong>WhatsApp</strong><br>
+          +62 812-3456-7890
+        </div>
+      </div>
+      <div class="info-item" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300" >
+        <i class="fas fa-clock"></i>
+        <div>
+          <strong>Jam Operasional</strong><br>
+          Senin - Sabtu: 07.00 - 21.00 WIB <br>
+          Minggu: 08.00 - 20.00 WIB
+        </div>
+      </div>
+      <div class="map" data-aos="zoom-in" data-aos-duration="1200" data-aos-delay="400">
+        <img src="map.png" alt="Peta Lokasi">
+      </div>
+    </div>
+    <div class="contact-form" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200" >
+      <h3>Kirim Pesan</h3>
+      <form action="submit_pesan.php" method="POST">
+        <input type="text" name="nama" placeholder="Nama" required 
+               data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+        <input type="email" name="email" placeholder="Email" required
+               data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+        <textarea name="pesan" placeholder="Pesan" required 
+                  data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300"></textarea>
+        <button type="submit" 
+                data-aos="zoom-in" data-aos-duration="1000" data-aos-delay="400">Kirim</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section" data-aos="fade-up" data-aos-duration="1000">
+      <h2 class="footer-title">Kopiku</h2>
+      <p>Nikmati kopi premium dengan rasa otentik dan suasana nyaman.</p>
+      <div class="social-icons" data-aos="zoom-in" data-aos-delay="200">
+        <a href="#"><i class="fab fa-instagram" style="color: white;"></i></a>
+        <a href="#"><i class="fab fa-facebook-f" style="color: white; margin-left: 5px;"></i></a>
+        <a href="#"><i class="fab fa-whatsapp" style="color: white; margin-left: 5px;"></i></a>
+        <a href="#"><i class="fab fa-tiktok" style="color: white; margin-left: 5px;"></i></a>
+      </div>
+    </div>
+    <div class="footer-section" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+      <h3>kunjungin kami di</h3>
+      <ul>
+        <li>Instagram</li>
+        <li>Youtube</li>
+        <li>Facebook</li>
+        <li>Tiktok</li>
+        <li>Website </li>
+      </ul>
+    </div>
+    <div class="footer-section" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+      <h3>Layanan</h3>
+      <ul>
+        <li>Makan di tempat</li>
+        <li>Pesan untuk acara</li>
+        <li>Pesan Antar</li>
+        <li>Catering Harian</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 WrathCoffee. All rights reserved.</p>
+  </div>
+</footer>
+  <script>
+    const plusBtns = document.querySelectorAll(".plus");
+    const minusBtns = document.querySelectorAll(".minus");
+    const totalEl = document.getElementById("total");
+    const notif = document.getElementById("notif");
+
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll(".menu-item").forEach(item => {
+        const price = parseInt(item.querySelector(".price").dataset.price);
+        const qty = parseInt(item.querySelector("input").value);
+        total += price * qty;
+      });
+      totalEl.textContent = "Rp " + total.toLocaleString("id-ID");
+    }
+
+document.querySelectorAll(".plus").forEach(btn => {
+  btn.addEventListener("click", function() {
+    let input = this.parentElement.querySelector("input");
+    input.value = parseInt(input.value) + 1;
+    updateTotal();
+  });
+});
+
+document.querySelectorAll(".minus").forEach(btn => {
+  btn.addEventListener("click", function() {
+    let input = this.parentElement.querySelector("input");
+    if (parseInt(input.value) > 0) {
+      input.value = parseInt(input.value) - 1;
+      updateTotal();
+    }
+  });
+});
+
+// biar kalau user ketik manual di input jumlah, total juga update
+document.querySelectorAll(".quantity input").forEach(input => {
+  input.addEventListener("input", function() {
+    if (this.value < 0 || isNaN(this.value)) this.value = 0;
+    updateTotal();
+  });
+});
+
+function updateTotal() {
+  let items = document.querySelectorAll(".menu-item");
+  let total = 0;
+
+  items.forEach(item => {
+    let harga = parseInt(item.querySelector(".price").dataset.price);
+    let jumlah = parseInt(item.querySelector(".quantity input").value);
+    total += harga * jumlah;
+  });
+
+  document.getElementById("total").innerText = "Rp " + total.toLocaleString("id-ID");
+}
+
+    function pesan() {
+      notif.classList.remove("show", "hide");
+      notif.style.display = "block";
+      setTimeout(() => {
+        notif.classList.add("show");
+      }, 10);
+      setTimeout(() => {
+        notif.classList.remove("show");
+        notif.classList.add("hide");
+      }, 1500);
+      setTimeout(() => {
+        notif.style.display = "none";
+        notif.classList.remove("hide");
+      }, 2000);
+
+      resetMenu();
+    }
+ function pesanan() {
+  let items = document.querySelectorAll(".menu-item");
+  let pesananList = [];
+  let total = 0;
+
+  items.forEach(item => {
+    let nama = item.querySelector("h3").innerText;
+    let harga = parseInt(item.querySelector(".price").dataset.price);
+    let jumlah = parseInt(item.querySelector(".quantity input").value);
+
+    if (jumlah > 0) {
+      pesananList.push(`${nama} x${jumlah} = ${harga * jumlah}`);
+      total += harga * jumlah;
+    }
+  });
+
+  if (pesananList.length === 0) {
+    alert("Belum ada pesanan!");
+    return;
+  }
+
+  let formData = new FormData();
+  formData.append("nama", pesananList.join(", "));
+  formData.append("jumlah", pesananList.length);
+  formData.append("total", total);
+
+  fetch("submit_pesanan.php", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.text())
+ .then(data => {
+  const notif = document.getElementById("notif");
+  notif.querySelector("h5").innerText = data; // cuma ubah teksnya aja
+  notif.classList.add("show");
+
+  setTimeout(() => {
+    notif.classList.remove("show");
+    resetMenu();
+  }, 2000);
+})
+ 
+  .catch(err => {
+    alert("Gagal mengirim pesanan!");
+    console.error(err);
+  });
+}
+
+function resetMenu() {
+  // reset input jumlah
+  document.querySelectorAll(".quantity input").forEach(input => input.value = 0);
+  // reset total harga ke Rp 0
+  document.getElementById("total").innerText = "Rp 0";
+}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+</body>
+</html>
