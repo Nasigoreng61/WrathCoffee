@@ -559,6 +559,74 @@
   font-size: 0.95rem;
   line-height: 1.5;
 }
+/* RESPONSIVE UNTUK HP */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar-brand {
+    font-size: 18px;
+  }
+  .navbar-nav {
+    text-align: center;
+  }
+  .navbar-collapse {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 0;
+  }
+
+  /* Hero section */
+  .hero {
+    height: auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 24px;
+  }
+  .hero p {
+    font-size: 16px;
+  }
+
+  /* About section */
+  .about-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .about-image img {
+    width: 90%;
+  }
+  .about-text {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+
+  /* Menu section */
+  .menu-container {
+    grid-template-columns: 1fr; /* jadi 1 kolom di HP */
+    gap: 20px;
+  }
+  .menu-item {
+    text-align: center;
+    padding: 15px;
+  }
+  .menu-item img {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  /* Form section */
+  form input, form textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+  }
+}
 
   </style>
 </head>
@@ -1081,4 +1149,5 @@ function resetMenu() {
   </script>
 </body>
 </html>
+
 
